@@ -92,9 +92,6 @@
         font-size: $font-size-sm;
         font-weight: 700;
         color: $text-primary;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     &__specialty {
