@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DOCTORS, WORK_HOURS, getBusySlotsForDoctor, formatHour, formatSlot } from '../data/doctors';
+import { WORK_HOURS, getBusySlotsForDoctor, formatHour, formatSlot } from '../data/doctors';
 import styles from './DoctorPanel.module.scss';
 
 function formatDateDisplay(dateStr) {
@@ -23,8 +23,20 @@ function DoctorCard({ doctor, selectedDate, bookings, onBook }) {
             .map(b => b.hour)
     );
 
+    // Check if the selected date is in the past
+    const isDateInPast = (dateStr, hour) => {
+        const now = new Date();
+        const [y, m, d] = dateStr.split('-');
+        
+        // Create a Date object for the slot
+        const slotDate = new Date(y, m - 1, d);
+        slotDate.setHours(Math.floor(hour), (hour % 1) * 60, 0, 0);
+
+        return slotDate < now;
+    };
+
     const handleSlotClick = (hour) => {
-        if (busySlots.has(hour) || bookedSlots.has(hour)) return;
+        if (busySlots.has(hour) || bookedSlots.has(hour) || isDateInPast(selectedDate, hour)) return;
         setSelectedSlot(prev => (prev === hour ? null : hour));
     };
 
@@ -45,7 +57,8 @@ function DoctorCard({ doctor, selectedDate, bookings, onBook }) {
         setExpanded(false);
     };
 
-    const freeCount = WORK_HOURS.filter(h => !busySlots.has(h) && !bookedSlots.has(h)).length;
+    const freeCount = WORK_HOURS.filter(h => !busySlots.has(h) && !bookedSlots.has(h) && !isDateInPast(selectedDate, h)).length;
+    const allPast = WORK_HOURS.every(h => isDateInPast(selectedDate, h));
 
     return (
         <div className={`${styles.doctor} ${expanded ? styles['doctor--expanded'] : ''}`}>
@@ -70,12 +83,12 @@ function DoctorCard({ doctor, selectedDate, bookings, onBook }) {
                 {/* Free slots badge & chevron */}
                 <span style={{
                     fontSize: '0.65rem', fontWeight: 700,
-                    background: freeCount > 0 ? 'rgba(74,222,128,0.12)' : 'rgba(248,113,113,0.1)',
-                    color: freeCount > 0 ? '#4ade80' : '#f87171',
-                    border: `1px solid ${freeCount > 0 ? 'rgba(74,222,128,0.3)' : 'rgba(248,113,113,0.25)'}`,
+                    background: allPast ? 'rgba(140, 130, 115, 0.1)' : freeCount > 0 ? 'rgba(74,222,128,0.12)' : 'rgba(248,113,113,0.1)',
+                    color: allPast ? '#7e7972' : freeCount > 0 ? '#4ade80' : '#f87171',
+                    border: `1px solid ${allPast ? 'rgba(140, 130, 115, 0.3)' : freeCount > 0 ? 'rgba(74,222,128,0.3)' : 'rgba(248,113,113,0.25)'}`,
                     borderRadius: '20px', padding: '2px 8px', marginLeft: '4px', flexShrink: 0
                 }}>
-                    {freeCount} libere
+                    {allPast ? 'History' : `${freeCount} libere`}
                 </span>
 
                 <span className={`${styles.doctor__chevron} ${expanded ? styles['doctor__chevron--open'] : ''}`}>▼</span>
@@ -90,12 +103,14 @@ function DoctorCard({ doctor, selectedDate, bookings, onBook }) {
 
                     <div className={styles['doctor__slots-grid']}>
                         {WORK_HOURS.map(hour => {
+                            const isPast = isDateInPast(selectedDate, hour);
                             const isBusy = busySlots.has(hour);
                             const isBooked = bookedSlots.has(hour);
                             const isSelected = selectedSlot === hour;
 
                             let slotClass = styles.doctor__slot;
-                            if (isBusy) slotClass += ` ${styles['doctor__slot--busy']}`;
+                            if (isPast && !isBooked) slotClass += ` ${styles['doctor__slot--busy']}`; // style as unavailable
+                            else if (isBusy) slotClass += ` ${styles['doctor__slot--busy']}`;
                             else if (isBooked) slotClass += ` ${styles['doctor__slot--booked']}`;
                             else if (isSelected) slotClass += ` ${styles['doctor__slot--selected']}`;
 
@@ -104,14 +119,14 @@ function DoctorCard({ doctor, selectedDate, bookings, onBook }) {
                                     key={hour}
                                     className={slotClass}
                                     onClick={() => handleSlotClick(hour)}
-                                    disabled={isBusy || isBooked}
-                                    title={isBusy ? 'Ocupat' : isBooked ? 'Rezervat de tine' : `Disponibil: ${formatSlot(hour)}`}
+                                    disabled={isBusy || isBooked || isPast}
+                                    title={isPast && !isBooked ? 'In the past' : isBusy ? 'Ocupat' : isBooked ? 'Rezervat de tine' : `Disponibil: ${formatSlot(hour)}`}
                                 >
                                     <span className={styles['doctor__slot-time']}>
                                         {formatHour(hour)}
                                     </span>
                                     <span className={styles['doctor__slot-time']} style={{ opacity: 0.6, fontSize: '0.6rem' }}>
-                                        {isBusy ? '✕' : isBooked ? '✓' : '–'}
+                                        {isPast && !isBooked ? '-' : isBusy ? '✕' : isBooked ? '✓' : '–'}
                                     </span>
                                 </button>
                             );
@@ -149,7 +164,7 @@ function DoctorCard({ doctor, selectedDate, bookings, onBook }) {
     );
 }
 
-export default function DoctorPanel({ selectedDate, bookings, onBook }) {
+export default function DoctorPanel({ selectedDate, bookings, onBook, userRole, doctors = [] }) {
     if (!selectedDate) {
         return (
             <div className={styles.panel}>
@@ -171,7 +186,7 @@ export default function DoctorPanel({ selectedDate, bookings, onBook }) {
             </div>
 
             <div className={styles.panel__doctors}>
-                {DOCTORS.map(doctor => (
+                {doctors.map(doctor => (
                     <DoctorCard
                         key={doctor.id}
                         doctor={doctor}

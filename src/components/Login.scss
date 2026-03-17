@@ -12,6 +12,21 @@
   padding: 24px;
 }
 
+.login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
 .login-card {
   position: relative;
   z-index: 10;
@@ -32,6 +47,10 @@
     gap: 24px;
   }
   box-shadow: 0 12px 32px rgba(140, 130, 115, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+  &--modal {
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+  }
 
   &__header {
     text-align: center;
@@ -136,5 +155,109 @@
       transform: translateY(1px);
       box-shadow: 0 2px 8px rgba(242, 124, 89, 0.2);
     }
+
+    &--patient {
+      background: rgba(140, 130, 115, 0.1);
+      color: $text-primary;
+      border: 1px solid rgba(140, 130, 115, 0.3);
+      box-shadow: none;
+
+      &:hover {
+        background: rgba(140, 130, 115, 0.15);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(140, 130, 115, 0.1);
+      }
+    }
+  }
+}
+
+.login-card__divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: $text-muted;
+  font-size: 12px;
+  font-weight: 600;
+  margin: -10px 0;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(140, 130, 115, 0.2);
+  }
+
+  &::before {
+    margin-right: 15px;
+  }
+
+  &::after {
+    margin-left: 15px;
+  }
+}
+
+.login-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: $text-secondary;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: $text-primary;
+  }
+}
+
+// ─── Tabs ──────────────────────────────────────────────────────────────────────
+.login-tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(140, 130, 115, 0.08);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.login-tab {
+  flex: 1;
+  padding: 8px 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: $text-muted;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: $text-primary;
+  }
+
+  &--active {
+    background: #fff;
+    color: $accent;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  }
+}
+
+// ─── Register row ──────────────────────────────────────────────────────────────
+.login-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
   }
 }

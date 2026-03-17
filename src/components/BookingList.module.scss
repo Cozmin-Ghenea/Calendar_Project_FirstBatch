@@ -104,6 +104,16 @@
         animation: fadeSlideOut 0.35s both;
     }
 
+    &--history {
+        opacity: 0.6;
+        background: rgba(255, 255, 255, 0.4);
+        border-color: rgba(140, 130, 115, 0.1);
+        
+        &:hover {
+            border-color: rgba(140, 130, 115, 0.2);
+        }
+    }
+
     &__avatar {
         width: 38px;
         height: 38px;
@@ -135,7 +145,14 @@
         font-size: $font-size-xs;
         color: $text-secondary;
         margin-top: 1px;
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.2rem;
+    }
+
+    &__patient {
+        font-size: $font-size-xs;
+        color: $text-secondary;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
     }
 
     &__meta {
@@ -145,6 +162,41 @@
         align-items: center;
         font-size: $font-size-xs;
         color: $text-muted;
+    }
+
+    &__status {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+
+        &--pending {
+            background: rgba(251, 191, 36, 0.15); /* Yellow/Orange */
+            color: #d97706;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        &--confirmed {
+            background: rgba(52, 211, 153, 0.15); /* Green */
+            color: $success;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        &--rejected {
+            background: rgba(248, 113, 113, 0.15); /* Red */
+            color: $danger;
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        &--past {
+            background: transparent;
+            color: $text-muted;
+            border-color: $border;
+        }
     }
 
     &__time-badge {
@@ -160,6 +212,15 @@
         color: $accent-light;
     }
 
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-shrink: 0;
+    }
+
+    &__action-btn--approve,
+    &__action-btn--reject,
     &__cancel {
         flex-shrink: 0;
         width: 28px;
@@ -167,19 +228,33 @@
         background: transparent;
         border: 1px solid transparent;
         border-radius: $radius-sm;
-        color: $text-muted;
         cursor: pointer;
         font-size: 0.8rem;
+        font-weight: bold;
         transition: all $transition-fast;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-top: 2px;
+    }
 
+    &__cancel, &__action-btn--reject {
+        color: $text-muted;
         &:hover {
             background: rgba(248, 113, 113, 0.1);
             border-color: rgba(248, 113, 113, 0.3);
             color: $danger;
+        }
+    }
+
+    &__action-btn--approve {
+        color: $success;
+        border-color: rgba(52, 211, 153, 0.3);
+        background: rgba(52, 211, 153, 0.1);
+        &:hover {
+            background: $success;
+            color: white;
+            box-shadow: 0 2px 6px rgba(52, 211, 153, 0.3);
         }
     }
 }
