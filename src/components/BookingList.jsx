@@ -47,22 +47,23 @@ export default function BookingList({ bookings, selectedDate, onCancel, onApprov
         if (userRole?.role === 'clinic' && userRole?.doctorId !== 'admin') {
             return b.doctorId === userRole.doctorId; // Doctor sees only their appointments
         }
-        return true; // Patient/Admin sees all
+        if (userRole?.role === 'patient') {
+            return b.patientEmail === userRole.email; // Patient sees ONLY their own
+        }
+        return true; // Admin sees all
     });
 
     const filtered = roleFiltered.filter(b => {
-        // If a specific date is clicked in the calendar, show only that date
         if (selectedDate) return b.date === selectedDate;
-
         if (filter === 'Azi') return b.date === todayKey;
         if (filter === 'Această Săptămână') return weekKeys.has(b.date);
         return true;
     });
 
-    // Sort by date then hour
+    // Sort by date (newest first), then hour (newest first)
     const sorted = [...filtered].sort((a, b) => {
-        if (a.date !== b.date) return a.date.localeCompare(b.date);
-        return a.hour - b.hour;
+        if (a.date !== b.date) return b.date.localeCompare(a.date);
+        return b.hour - a.hour;
     });
 
     const handleCancel = (id) => {
