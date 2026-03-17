@@ -47,8 +47,8 @@ function StaffLogin({ onLogin, setError, error }) {
     <form className="login-form" onSubmit={handleSubmit}>
       {error && <div className="login-form__error">{error}</div>}
       <div className="login-form__group">
-        <label htmlFor="staff-email">Email</label>
-        <input type="email" id="staff-email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="andrei.popescu@pawsclinic.ro" required />
+        <label htmlFor="staff-email">Email / Username</label>
+        <input type="text" id="staff-email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="andrei.popescu@pawsclinic.ro or admin" required />
       </div>
       <div className="login-form__group">
         <label htmlFor="staff-password">Password</label>
