@@ -12,7 +12,7 @@ build_app:
   artifacts:
     paths:
       - dist/
-    expire in: 30mins
+    expire_in: 30mins
 
 deploy_to_github:
   stage: deploy
