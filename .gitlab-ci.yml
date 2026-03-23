@@ -24,4 +24,4 @@ deploy_to_github:
   script:
     - npm install
     - npm run build
-    - npx gh-pages -d dist --report https://x-access-token:$GITHUB_TOKEN@github.com/Cozmin-Ghenea/CalendarProject.git -m "Deploy from Gitlab CI [skip ci]""
+    - npx gh-pages -d dist --report https://x-access-token:$GITHUB_TOKEN@github.com/Cozmin-Ghenea/Calendar_Project_FirstBatch.git -m "Deploy from Gitlab CI [skip ci]""
