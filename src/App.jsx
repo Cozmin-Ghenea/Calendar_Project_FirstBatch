@@ -80,23 +80,23 @@ export default function App() {
     setLoadingBookings(true);
     const { data, error } = await supabase
       .from('bookings')
-      .select('*')
+      .select('*, doctors(name, color, avatar, specialty), profiles(full_name, email)')
       .order('created_at', { ascending: false });
 
     if (!error && data) {
       setBookings(data.map(b => ({
         id: b.id,
         doctorId: b.doctor_id,
-        doctorName: b.doctor_name,
-        specialty: b.specialty,
-        doctorColor: b.doctor_color,
-        doctorAvatar: b.doctor_avatar,
+        doctorName: b.doctors?.name || b.doctor_name,
+        specialty: b.doctors?.specialty || b.specialty,
+        doctorColor: b.doctors?.color || b.doctor_color,
+        doctorAvatar: b.doctors?.avatar || b.doctor_avatar,
         date: b.date,
         hour: b.hour,
         slot: b.slot,
         status: b.status,
-        patientName: b.patient_name,
-        patientEmail: b.patient_email,
+        patientName: b.profiles?.full_name || b.patient_name,
+        patientEmail: b.profiles?.email || b.patient_email,
       })));
     } else if (error) {
       console.error('Error fetching bookings:', error.message);
@@ -133,16 +133,11 @@ export default function App() {
   async function insertBooking(booking, user) {
     const row = {
       doctor_id:     booking.doctorId,
-      doctor_name:   booking.doctorName,
-      specialty:     booking.specialty,
-      doctor_color:  booking.doctorColor,
-      doctor_avatar: booking.doctorAvatar,
+      user_id:       user?.patientId || null,
       date:          booking.date,
       hour:          booking.hour,
       slot:          booking.slot,
       status:        'pending',
-      patient_name:  user?.patientName || 'Unknown',
-      patient_email: user?.email || '',
     };
 
     const { error } = await supabase.from('bookings').insert([row]);
