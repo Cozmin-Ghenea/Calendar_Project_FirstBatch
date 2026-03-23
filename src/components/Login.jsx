@@ -55,7 +55,7 @@ function StaffLogin({ onLogin, setError, error }) {
         <input type="password" id="staff-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
       </div>
       <button type="submit" className="login-form__button" disabled={loading}>
-        {loading ? 'Signing In…' : 'Sign In as Staff 🏥'}
+        {loading ? 'Signing In…' : 'Sign In as Staff'}
       </button>
     </form>
   );
