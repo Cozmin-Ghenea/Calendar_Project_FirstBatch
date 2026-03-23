@@ -5,6 +5,8 @@ stages:
 build_app:
   stage: build
   script:
+    - echo "VITE_SUPABASE_URL=$VITE_SUPABASE_URL" > .env
+    - echo "VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY" >> .env
     - npm install
     - npm run build
   artifacts:
