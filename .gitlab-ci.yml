@@ -4,8 +4,8 @@ stages:
   - build
   - deploy
 
-before_script:
-  - cd CalendarProject-main
+# before_script:
+  # - cd CalendarProject-main
 
 build_app:
   stage: build
