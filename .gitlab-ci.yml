@@ -1,0 +1,21 @@
+image: node:20-alpine
+stages:
+  - build
+  - deploy
+build_app:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 30 mins
+deploy_to_github:
+  stage: deploy
+  only:
+    - main
+  script:
+    - npm install
+    - npm run build
+    - npx gh-pages -d dist --repo https://x-access-token:$GITHUB_TOKEN@github.com/Cozmin-Ghenea/Calendar_Project_FirstBatch.git -m "Deploy [skip ci]"
