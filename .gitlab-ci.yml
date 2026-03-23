@@ -1,39 +1,39 @@
 image: node:20-alpine
 
-# stages:
-#   - debug
-
-# debug_runner_files:
-#   stage: debug
-#   script:
-#     - echo "--- current Location ---"
-#     - pwd
-#     - echo "--- Files insde the directory ---"
-#     - ls -la
-
-
 stages:
-  - build
-  - deploy
+  - debug
 
-before_script:
-  - cd CalendarProject-main
-
-build_app:
-  stage: build
+debug_runner_files:
+  stage: debug
   script:
-    - npm install
-    - npm run build
-  artifacts:
-    paths:
-      - CalendarProject-main/dist/
-    expire_in: 30mins
+    - echo "--- current Location ---"
+    - pwd
+    - echo "--- Files insde the directory ---"
+    - ls -la
 
-deploy_to_github:
-  stage: deploy
-  only:
-    - main
-  script:
-    - npm install
-    - npm run build
-    - npx gh-pages -d dist --report https://x-access-token:$GITHUB_TOKEN@github.com/Cozmin-Ghenea/Calendar_Project_FirstBatch.git -m "Deploy from Gitlab CI [skip ci]""
+
+# stages:
+#   - build
+#   - deploy
+
+# before_script:
+#   - cd CalendarProject-main
+
+# build_app:
+#   stage: build
+#   script:
+#     - npm install
+#     - npm run build
+#   artifacts:
+#     paths:
+#       - CalendarProject-main/dist/
+#     expire_in: 30mins
+
+# deploy_to_github:
+#   stage: deploy
+#   only:
+#     - main
+#   script:
+#     - npm install
+#     - npm run build
+#     - npx gh-pages -d dist --report https://x-access-token:$GITHUB_TOKEN@github.com/Cozmin-Ghenea/Calendar_Project_FirstBatch.git -m "Deploy from Gitlab CI [skip ci]""
