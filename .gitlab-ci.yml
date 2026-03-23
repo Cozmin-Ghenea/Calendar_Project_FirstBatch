@@ -21,8 +21,7 @@ deploy_to_github:
     - main
   script:
     - apk add --no-cache git
-    - git config --global user.email "deploy-agent@gitlab.com"
-    - git config --global user.name "GitLab IC"
-    - npm install
-    - npm run build
-    - npx gh-pages -d dist --repo https://$GITHUB_TOKEN@github.com/Cozmin-Ghenea/Calendar_Project_FirstBatch.git -m "Deploy [skip ci]"
+    # Set up remote with your token
+    - git remote add github https://$GITHUB_TOKEN@github.com/Cozmin-Ghenea/Calendar_Project_FirstBatch.git || true
+    # Push the current branch to GitHub's main branch
+    - git push github HEAD:main --force
